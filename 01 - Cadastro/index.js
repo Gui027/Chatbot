@@ -9,10 +9,10 @@ const url = "mongodb://localhost:27017";
 const dbName = "chatbotdb";
 
 const jsonParser = bodyParser.json();
-const urlencodeParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(jsonParser);
-app.use(urlencodeParser);
+app.use(urlencodedParser);
 
 MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
   assert.equal(null, err);
@@ -24,7 +24,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
 app.listen(3000);
 console.log("servidor rodando em: localhost: 3000");
 
-app.post("/insert", urlencodesParser, function (req, res) {
+app.post("/insert", urlencodedParser, function (req, res) {
   //Através desse post o usuário será capaz de inserir dados ao nosso cadastro.
   let objJSON = {};
   if (req.body.code_user) objJSON.code_user = req.body.code_user;
@@ -55,7 +55,7 @@ function cod() {
   const minuto = data.getMinutes();
   const segundo = data.getSeconds();
   const milesegundos = data.getMilliseconds();
-  const result =
+  const result = parseInt(
     Number(
       ano +
         "" +
@@ -70,17 +70,16 @@ function cod() {
         segundo +
         "" +
         milesegundos
-    ) / 2;
+    ) / 2
+  );
   return result;
 }
 
-app.post("/update", urlencodesParser, function (req, res) {
+app.post("/update", urlencodedParser, function (req, res) {
   let objJSON = {};
   if (req.body.code_user) objJSON.code_user = req.body.code_user;
-  else objJSON.code_user = 0;
   if (req.body.code_session) objJSON.code_session = req.body.code_session;
   if (req.body.code_current) objJSON.code_current = req.body.code_current;
-  else objJSON.code_current = 0;
   if (req.body.code_before) objJSON.code_before = req.body.code_before;
   if (req.body.input) objJSON.input = req.body.input;
   if (req.body.output) objJSON.output = req.body.output;
@@ -90,13 +89,11 @@ app.post("/update", urlencodesParser, function (req, res) {
   });
 });
 
-app.post("/delete", urlencodesParser, function (req, res) {
+app.post("/delete", urlencodedParser, function (req, res) {
   let objJSON = {};
   if (req.body.code_user) objJSON.code_user = req.body.code_user;
-  else objJSON.code_user = 0;
   if (req.body.code_session) objJSON.code_session = req.body.code_session;
   if (req.body.code_current) objJSON.code_current = req.body.code_current;
-  else objJSON.code_current = 0;
   if (req.body.code_before) objJSON.code_before = req.body.code_before;
   if (req.body.input) objJSON.input = req.body.input;
   if (req.body.output) objJSON.output = req.body.output;
@@ -106,7 +103,7 @@ app.post("/delete", urlencodesParser, function (req, res) {
   });
 });
 
-app.post("/find", urlencodesParser, function (req, res) {
+app.post("/find", urlencodedParser, function (req, res) {
   let objJSON = {};
   if (req.body.code_user) objJSON.code_user = req.body.code_user;
   if (req.body.code_session) objJSON.code_session = req.body.code_session;
@@ -143,8 +140,7 @@ const updateData = function (objJSON, callback) {
 
 const deleteData = function (objJSON, callback) {
   const collection = db.collection("chatbot");
-  const code_current = objJSON.code_current;
-  collection.deleteOne({ code_current: code_current }, function (err, result) {
+  collection.deleteOne(objJSON, function (err, result) {
     assert.equal(null, err);
     callback(result);
   });
