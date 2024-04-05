@@ -9,10 +9,10 @@ const url = "mongodb://localhost:27017";
 const dbName = "chatbotdb";
 
 const jsonParser = bodyParser.json();
-const urlencodeParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(jsonParser);
-app.use(urlencodeParser);
+app.use(urlencodedParser);
 
 MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
   assert.equal(null, err);
@@ -24,7 +24,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
 app.listen(3000);
 console.log("servidor rodando em: localhost: 3000");
 
-app.post("/insert", urlencodesParser, function (req, res) {
+app.post("/insert", urlencodedParser, function (req, res) {
   let objJSON = {};
   if (req.body.code_user) objJSON.code_user = req.body.code_user;
   else objJSON.code_user = 0;
